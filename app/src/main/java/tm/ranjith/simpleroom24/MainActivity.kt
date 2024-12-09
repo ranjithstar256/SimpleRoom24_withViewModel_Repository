@@ -10,17 +10,15 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.room.Room
-import kotlinx.coroutines.launch
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.room.Room
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,17 +31,26 @@ class MainActivity : ComponentActivity() {
                 "templedbexpl.db"
             ).build()
 
-            saveTempleData(db)
+            val repositoryvariable = Repository(db.templedao())
+
+            val viewModelabcd = TempleViewModel(repositoryvariable)
+
+            //saveTempleData(db)
+
+            saveTempleData(db,viewModelabcd)
+
+
         }
     }
 }
 @Composable
-fun saveTempleData(db: TempleDatabase){
+fun saveTempleData(db: TempleDatabase,templeViewModel: TempleViewModel){
 
     val scope = rememberCoroutineScope()
     var TempleName by remember { mutableStateOf("") }
     var TempleLocation by remember { mutableStateOf("") }
     var TempleMain by remember { mutableStateOf("") }
+    var reslt by remember { mutableStateOf("") }
 
 
 
@@ -63,15 +70,38 @@ fun saveTempleData(db: TempleDatabase){
         Button(onClick = {
 
             scope.launch {
-                db.templedao().insertNewTemple(templeOneData)
+               /// db.templedao().insertNewTemple(templeOneData)
+                templeViewModel.insertTemple(templeOneData)
             }
 
         }) {
             Text(text = "save")
         }
 
+        Button(onClick = {
+            scope.launch {
+             reslt=   db.templedao().getTempleByName(TempleName)
+            }
+        }) {
+            Text(text = "get main god")
+        }
+        Text(text = reslt)
+
     }
-
-
-    
 }
+
+
+
+
+// btn itslef whereever
+
+
+
+
+
+
+
+
+
+
+

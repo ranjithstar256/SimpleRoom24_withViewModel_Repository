@@ -13,6 +13,9 @@ interface TempleDAO {
     suspend fun insertNewTemple(temple: Temple) // paused and resume // co routine
 
 
+    @Query("select MainGod from Temple where TempleName = :name")
+    suspend fun getTempleByName(name: String): String
+
     //insert into Temple (TempleName, Location, MainGod)
 // values ('Tirupathi','Andhra Pradesh','Lord Venkateswara')
 
